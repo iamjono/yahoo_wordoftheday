@@ -1,13 +1,14 @@
 [
 /* =======================================================
-Requires xml_tree
+Requires xml_tree and "every"
 ======================================================= */
 define yahoo_wordoftheday => thread {
 	data
-		public date::date,
-		public word::string,
-		public definition::string,
-		public link::string
+		public date::date 			= date,
+		public word::string 		= string,
+		public definition::string	= string,
+		public link::string			= string,
+		private daterun::date 		= date
 	/* =====================================================================================
 		onCreate Method is not really used here. 
 		Initially included and used for testing.
@@ -26,16 +27,16 @@ define yahoo_wordoftheday => thread {
 		.definition = #data->channel->item->description->contents
 		.link = 'http://education.yahoo.com/reference/dictionary/entry/'+.word
 		.date = date_gmttolocal(date(#data->channel->item->pubDate->contents, -format='%a, %d %b %Y %H:%M:%S GMT'))
-	
+		.daterun = date // set for marker of when run
 	}
 	/* =====================================================================================
 		The active_tick method fires on a pre-determined interval to refresh content
 	===================================================================================== */	
-	public active_tick() => {
+	public active_tick() => every(60) => {
 		// trigger refresh of content
-		.populate()
+		date->julianday != .daterun->julianday ? .populate()
 		
-		// run once per day (every 86400 seconds)
+		// run at least once per day (every 86400 seconds)
 		return 86400
 	}
 	
