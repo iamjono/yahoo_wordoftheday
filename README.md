@@ -18,6 +18,7 @@ Sample Usage
 
 ```lasso
 	sys_listTypes !>> 'xml_tree' ? include('xml_tree.lasso')
+	sys_listunboundmethods !>> 'every' ? include('every.lasso')
 	sys_listTypes !>> 'yahoo_wordoftheday' ? include('yahoo_wordoftheday.lasso')
 
 	'Word of the Day: <a href="'
